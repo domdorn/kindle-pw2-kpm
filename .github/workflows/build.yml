@@ -27,25 +27,29 @@ jobs:
       - name: Build all packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_BASE_URL: "https://github.com/${{ github.repository }}/releases/download"
           REPO_ID: ${{ vars.REPO_ID || 'dominikdorn' }}
           REPO_NAME: ${{ vars.REPO_NAME || 'Dominik Dorn KPM Repo' }}
           REPO_DESC: ${{ vars.REPO_DESC || 'kindlepw2-compatible packages' }}
-        run: python build.py
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          REPO_BASE_URL="https://github.com/${{ github.repository }}/releases/download/build-${SHORT_SHA}" \
+            python build.py
 
-      - name: Publish packages as GitHub Releases
+      - name: Publish packages as GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          for kpkg in dist/*.kpkg; do
-            fname=$(basename "$kpkg")
-            id=$(echo "$fname" | cut -d_ -f1)
-            version=$(echo "$fname" | cut -d_ -f2)
-            tag="${id}-${version}"
-            gh release view "$tag" > /dev/null 2>&1 || \
-              gh release create "$tag" --title "$tag" --notes "Auto-built by CI"
-            gh release upload "$tag" "$kpkg" --clobber
-          done
+          SHORT_SHA="${GITHUB_SHA::7}"
+          TAG="build-${SHORT_SHA}"
+          gh release create "$TAG" --title "$TAG" --notes "Auto-built by CI" dist/*.kpkg
+
+      - name: Clean up old releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --limit 100 --json tagName --jq '.[].tagName' | \
+            grep '^build-' | tail -n +6 | \
+            xargs -r -I{} gh release delete {} --yes --cleanup-tag
 
       - name: Commit updated manifest
         run: |
