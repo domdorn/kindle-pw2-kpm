@@ -1,0 +1,10 @@
+id: kindlefilemanagers
+name: Kindle File Managers
+author: kbarni
+description: "Manage device files using Filebrowser or Syncthing via KUAL"
+platform: kindlepw2
+source:
+  type: github_release
+  repo: kbarni/kindlefilemanagers
+  asset_pattern: "filemanagers.zip"
+  extract_subdir: filemanagers

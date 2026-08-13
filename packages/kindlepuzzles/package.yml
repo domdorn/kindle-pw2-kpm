@@ -1,0 +1,10 @@
+id: kindlepuzzles
+name: Kindle Puzzles
+author: kbarni
+description: "Simon Tatham's Portable Puzzle Collection — over 30 classic logic puzzles"
+platform: kindlepw2
+source:
+  type: github_release
+  repo: kbarni/kindlepuzzles
+  asset_pattern: "puzzles.zip"
+  extract_subdir: puzzles

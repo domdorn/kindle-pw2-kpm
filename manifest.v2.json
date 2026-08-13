@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+  "id": "dominikdorn",
+  "name": "Dominik Dorn KPM Repo",
+  "description": "kindlepw2-compatible packages pending upstream inclusion",
+  "packages": {
+    "kinamp": {
+      "name": "KinAMP",
+      "author": "kbarni",
+      "description": "Native Kindle music and radio player with KOReader integration",
+      "artifacts": [
+        {
+          "url": "https://dominikdorn.com/kpm/kinamp_3.0.0_kindlepw2.kpkg",
+          "version": [
+            3,
+            0,
+            0
+          ],
+          "dependencies": [],
+          "supported_platforms": [
+            "kindlepw2"
+          ]
+        }
+      ]
+    }
+  }
+}
