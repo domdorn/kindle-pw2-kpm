@@ -8,20 +8,8 @@ them at `https://dominikdorn.com/kpm/`.
 
 ## Adding this repo to your Kindle
 
-Drop this scriptlet into `/mnt/us/documents/` and open it from your library:
-
-```sh
-#!/bin/sh
-KPM="/var/local/kmc/bin/kpm"
-SU="/var/local/kmc/bin/su"
-$SU -c "$KPM --fbink add-repo https://dominikdorn.com/kpm/manifest.v2.json"
-sleep 4
-$SU -c "$KPM --fbink list-repo"
-sleep 4
-$SU -c "$KPM --fbink update"
-sleep 4
-/usr/bin/xrefresh -d :0.0
-```
+Download [setup-repo.sh](https://dominikdorn.com/kpm/setup-repo.sh) to your Kindle's
+`/mnt/us/documents/` folder (via USB or the Kindle browser), then open it from your library.
 
 Then install packages normally:
 
