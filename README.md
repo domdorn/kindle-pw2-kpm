@@ -1,14 +1,14 @@
-# kindle-pw2-kpm
+# kindlepw2-kpm
 
 KPM package repository for `kindlepw2` Kindles (Paperwhite 2–4, Voyage, Oasis 1–3).
 
 The official [KindleModding repo](https://repo.kindlemodding.org) only ships `kindlehf`
 artifacts. This repo repackages upstream releases as clean `kindlepw2` kpkgs and hosts
-them at `https://dominikdorn.com/kpm/`.
+them via GitHub Releases.
 
 ## Adding this repo to your Kindle
 
-Download [setup-repo.sh](https://dominikdorn.com/kpm/setup-repo.sh) to your Kindle's
+Download [setup-repo.sh](https://raw.githubusercontent.com/domdorn/kindlepw2-kpm/main/setup-repo.sh) to your Kindle's
 `/mnt/us/documents/` folder (via USB or the Kindle browser), then open it from your library.
 
 Then install packages normally:
@@ -29,6 +29,11 @@ Then install packages normally:
 | lark | LARK | [kbarni/LARKPlayer](https://github.com/kbarni/LARKPlayer) |
 | kindlepuzzles | Kindle Puzzles | [kbarni/kindlepuzzles](https://github.com/kbarni/kindlepuzzles) |
 | kindlefilemanagers | Kindle File Managers | [kbarni/kindlefilemanagers](https://github.com/kbarni/kindlefilemanagers) |
+| kships | KShips (Battleship) | [LOT-PL/KShips](https://github.com/LOT-PL/KShips) |
+| gambatte | Gambatte-K2 (Game Boy) | [crazy-electron/gambatte-k2](https://github.com/crazy-electron/gambatte-k2) |
+| gnomegames | Gnome Chess & Mines | [crazy-electron/GnomeGames4Kindle](https://github.com/crazy-electron/GnomeGames4Kindle) |
+| kanki | KAnki (Flashcards) | [crizmo/KAnki](https://github.com/crizmo/KAnki) |
+| kreate | Kreate (Drawing) | [Foskya/Kreate](https://github.com/Foskya/Kreate) |
 
 ## Adding a new package
 
@@ -95,14 +100,9 @@ and on a weekly schedule to pick up upstream releases.
 - `DEPLOY_SSH_KEY` — private SSH key with access to the deploy server
 
 **Optional GitHub variables** (with defaults):
-- `REPO_BASE_URL` — `https://dominikdorn.com/kpm`
 - `REPO_ID` — `dominikdorn`
 - `REPO_NAME` — `Dominik Dorn KPM Repo`
 - `REPO_DESC` — description string
-- `DEPLOY_HOST` — `admin.meinweb.at`
-- `DEPLOY_USER` — `root`
-- `DEPLOY_PATH` — `/var/www/vhosts/dominikdorn.com/httpdocs/kpm/`
-- `DEPLOY_PORT` — `47251`
 
 ## Known limitations
 
