@@ -1,5 +1,6 @@
 #!/bin/sh
-cp -rf ./kinamp/KinAMP /mnt/us/KinAMP
+mkdir -p /mnt/us/KinAMP
+cp -rf ./kinamp/KinAMP/. /mnt/us/KinAMP/
 chmod +x /mnt/us/KinAMP/KinAMP* /mnt/us/KinAMP/*.sh
 
 mkdir -p /mnt/us/extensions/kinamp

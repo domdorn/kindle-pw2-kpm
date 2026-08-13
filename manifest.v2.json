@@ -4,44 +4,6 @@
   "name": "Dominik Dorn KPM Repo",
   "description": "kindlepw2-compatible packages pending upstream inclusion",
   "packages": {
-    "kinamp": {
-      "name": "KinAMP",
-      "author": "kbarni",
-      "description": "Native Kindle music and radio player with KOReader integration",
-      "artifacts": [
-        {
-          "url": "https://dominikdorn.com/kpm/kinamp_3.0.0_kindlepw2.kpkg",
-          "version": [
-            3,
-            0,
-            0
-          ],
-          "dependencies": [],
-          "supported_platforms": [
-            "kindlepw2"
-          ]
-        }
-      ]
-    },
-    "kindlefilemanagers": {
-      "name": "Kindle File Managers",
-      "author": "kbarni",
-      "description": "Manage device files using Filebrowser or Syncthing via KUAL",
-      "artifacts": [
-        {
-          "url": "https://dominikdorn.com/kpm/kindlefilemanagers_1.0.1_kindlepw2.kpkg",
-          "version": [
-            1,
-            0,
-            1
-          ],
-          "dependencies": [],
-          "supported_platforms": [
-            "kindlepw2"
-          ]
-        }
-      ]
-    },
     "kindlepuzzles": {
       "name": "Kindle Puzzles",
       "author": "kbarni",
@@ -99,6 +61,25 @@
         }
       ]
     },
+    "kinamp": {
+      "name": "KinAMP",
+      "author": "kbarni",
+      "description": "Native Kindle music and radio player with KOReader integration",
+      "artifacts": [
+        {
+          "url": "https://dominikdorn.com/kpm/kinamp_3.0.0_kindlepw2.kpkg",
+          "version": [
+            3,
+            0,
+            0
+          ],
+          "dependencies": [],
+          "supported_platforms": [
+            "kindlepw2"
+          ]
+        }
+      ]
+    },
     "lark": {
       "name": "LARK",
       "author": "kbarni",
@@ -109,6 +90,25 @@
           "version": [
             2,
             8,
+            1
+          ],
+          "dependencies": [],
+          "supported_platforms": [
+            "kindlepw2"
+          ]
+        }
+      ]
+    },
+    "kindlefilemanagers": {
+      "name": "Kindle File Managers",
+      "author": "kbarni",
+      "description": "Manage device files using Filebrowser or Syncthing via KUAL",
+      "artifacts": [
+        {
+          "url": "https://dominikdorn.com/kpm/kindlefilemanagers_1.0.1_kindlepw2.kpkg",
+          "version": [
+            1,
+            0,
             1
           ],
           "dependencies": [],

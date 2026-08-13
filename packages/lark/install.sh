@@ -1,5 +1,6 @@
 #!/bin/sh
-cp -rf ./lark/LARK /mnt/us/LARK
+mkdir -p /mnt/us/LARK
+cp -rf ./lark/LARK/. /mnt/us/LARK/
 chmod +x /mnt/us/LARK/larkplayer* /mnt/us/LARK/*.sh
 
 mkdir -p /mnt/us/extensions/lark

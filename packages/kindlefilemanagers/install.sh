@@ -1,5 +1,6 @@
 #!/bin/sh
-cp -rf ./kindlefilemanagers/filemanagers /mnt/us/filemanagers
+mkdir -p /mnt/us/filemanagers
+cp -rf ./kindlefilemanagers/filemanagers/. /mnt/us/filemanagers/
 chmod +x /mnt/us/filemanagers/bin/filebrowser
 chmod +x /mnt/us/filemanagers/bin/syncthing
 chmod +x /mnt/us/filemanagers/*.sh
