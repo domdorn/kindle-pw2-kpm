@@ -311,6 +311,12 @@ def main():
         print("\nNothing built.")
         sys.exit(1)
 
+    # When building a subset, merge with existing manifest so other packages aren't dropped
+    if args.packages:
+        built_ids = {p["id"] for p in built}
+        existing = [p for p in load_existing_manifest() if p["id"] not in built_ids]
+        built = existing + built
+
     generate_manifest(built)
 
     print(f"\nDone: {len(built)} built, {len(failed)} failed")

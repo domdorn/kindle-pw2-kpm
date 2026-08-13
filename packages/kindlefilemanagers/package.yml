@@ -7,4 +7,4 @@ source:
   type: github_release
   repo: kbarni/kindlefilemanagers
   asset_pattern: "filemanagers.zip"
-  extract_subdir: filemanagers
+  # zip extracts flat (filemanagers/, documents/, extensions/) — no subdir
