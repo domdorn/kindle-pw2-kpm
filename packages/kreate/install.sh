@@ -1,15 +1,15 @@
 #!/bin/sh
 APP_ID="xyz.foskya.kreate"
 TARGET_DIR="/var/local/mesquite/kreate"
-DB="/var/local/appreg/appreg.db"
+DB="/var/local/appreg.db"
 
 mkdir -p "$TARGET_DIR"
 cp -rf ./Kreate-main/kreate/. "$TARGET_DIR/"
 
-sqlite3 "$DB" "INSERT OR REPLACE INTO application (app_id, hidden) VALUES ('$APP_ID', 0);"
-sqlite3 "$DB" "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('$APP_ID', 'command', '/usr/bin/mesquite');"
-sqlite3 "$DB" "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('$APP_ID', 'name', 'Kreate');"
-sqlite3 "$DB" "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('$APP_ID', 'config', '$TARGET_DIR/config.xml');"
+sqlite3 "$DB" "INSERT OR IGNORE INTO interfaces(interface) VALUES('application');"
+sqlite3 "$DB" "INSERT OR IGNORE INTO handlerIds(handlerId) VALUES('$APP_ID');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','lipcId','$APP_ID');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','command','/usr/bin/mesquite -l $APP_ID -c file://$TARGET_DIR/ -j');"
 
 cp -f ./scriptlets/Kreate.sh /mnt/us/documents/Kreate.sh
 chmod +x /mnt/us/documents/Kreate.sh

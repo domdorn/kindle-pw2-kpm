@@ -2,11 +2,12 @@
 mkdir -p /var/local/mesquite/kanki
 cp -rf ./kanki/kanki/. /var/local/mesquite/kanki/
 
-# Register app in appreg.db
-sqlite3 /var/local/appreg/appreg.db "INSERT OR REPLACE INTO application (app_id, hidden) VALUES ('xyz.kurizu.kanki', 0);"
-sqlite3 /var/local/appreg/appreg.db "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('xyz.kurizu.kanki', 'command', '/usr/bin/mesquite');"
-sqlite3 /var/local/appreg/appreg.db "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('xyz.kurizu.kanki', 'name', 'KAnki');"
-sqlite3 /var/local/appreg/appreg.db "INSERT OR REPLACE INTO property (app_id, name, value) VALUES ('xyz.kurizu.kanki', 'config', '/var/local/mesquite/kanki/config.xml');"
+APP_ID="xyz.kurizu.kanki"
+DB="/var/local/appreg.db"
+sqlite3 "$DB" "INSERT OR IGNORE INTO interfaces(interface) VALUES('application');"
+sqlite3 "$DB" "INSERT OR IGNORE INTO handlerIds(handlerId) VALUES('$APP_ID');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','lipcId','$APP_ID');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','command','/usr/bin/mesquite -l $APP_ID -c file:///var/local/mesquite/kanki/ -j');"
 
 cp -f ./scriptlets/KAnki.sh /mnt/us/documents/KAnki.sh
 chmod +x /mnt/us/documents/KAnki.sh

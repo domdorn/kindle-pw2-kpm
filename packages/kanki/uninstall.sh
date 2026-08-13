@@ -1,8 +1,10 @@
 #!/bin/sh
 rm -f /mnt/us/documents/KAnki.sh
 rm -rf /mnt/us/documents/KAnki.sh.sdr
-sqlite3 /var/local/appreg/appreg.db "DELETE FROM property WHERE app_id='xyz.kurizu.kanki';"
-sqlite3 /var/local/appreg/appreg.db "DELETE FROM application WHERE app_id='xyz.kurizu.kanki';"
+DB="/var/local/appreg.db"
+APP_ID="xyz.kurizu.kanki"
+sqlite3 "$DB" "DELETE FROM properties WHERE handlerId='$APP_ID';"
+sqlite3 "$DB" "DELETE FROM handlerIds WHERE handlerId='$APP_ID';"
 if [ ! "$1" = "upgrade" ]; then
     rm -rf /var/local/mesquite/kanki
 fi
