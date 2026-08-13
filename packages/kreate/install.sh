@@ -9,7 +9,8 @@ cp -rf ./Kreate-main/kreate/. "$TARGET_DIR/"
 sqlite3 "$DB" "INSERT OR IGNORE INTO interfaces(interface) VALUES('application');"
 sqlite3 "$DB" "INSERT OR IGNORE INTO handlerIds(handlerId) VALUES('$APP_ID');"
 sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','lipcId','$APP_ID');"
-sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','command','/usr/bin/mesquite -l $APP_ID -c file://$TARGET_DIR/ -j');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','command','/usr/bin/mesquite -l $APP_ID -c file://$TARGET_DIR/');"
+sqlite3 "$DB" "INSERT OR REPLACE INTO properties(handlerId,name,value) VALUES('$APP_ID','supportedOrientation','U');"
 
 cp -f ./scriptlets/Kreate.sh /mnt/us/documents/Kreate.sh
 chmod +x /mnt/us/documents/Kreate.sh
