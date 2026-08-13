@@ -224,8 +224,10 @@ def generate_manifest(built_packages):
     packages = {}
     for pkg in built_packages:
         pkg_id = pkg["id"]
+        ver_str = ".".join(str(v) for v in pkg["version"])
+        tag = f"{pkg_id}-{ver_str}"
         artifact = {
-            "url": f"{REPO_BASE_URL}/{pkg['kpkg_name']}",
+            "url": f"{REPO_BASE_URL}/{tag}/{pkg['kpkg_name']}",
             "version": pkg["version"],
             "dependencies": pkg["dependencies"],
             "supported_platforms": [pkg["platform"]],

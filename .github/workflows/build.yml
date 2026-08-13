@@ -27,27 +27,25 @@ jobs:
       - name: Build all packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_BASE_URL: ${{ vars.REPO_BASE_URL || 'https://dominikdorn.com/kpm' }}
+          REPO_BASE_URL: "https://github.com/${{ github.repository }}/releases/download"
           REPO_ID: ${{ vars.REPO_ID || 'dominikdorn' }}
           REPO_NAME: ${{ vars.REPO_NAME || 'Dominik Dorn KPM Repo' }}
           REPO_DESC: ${{ vars.REPO_DESC || 'kindlepw2-compatible packages' }}
         run: python build.py
 
-      - name: Upload kpkgs to server
+      - name: Publish packages as GitHub Releases
         env:
-          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          DEPLOY_HOST: ${{ vars.DEPLOY_HOST || 'admin.meinweb.at' }}
-          DEPLOY_USER: ${{ vars.DEPLOY_USER || 'root' }}
-          DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/var/www/vhosts/dominikdorn.com/httpdocs/kpm/' }}
-          DEPLOY_PORT: ${{ vars.DEPLOY_PORT || '47251' }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" >> ~/.ssh/known_hosts
-          scp -P "$DEPLOY_PORT" -i ~/.ssh/deploy_key \
-            dist/*.kpkg manifest.v2.json \
-            "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}"
+          for kpkg in dist/*.kpkg; do
+            fname=$(basename "$kpkg")
+            id=$(echo "$fname" | cut -d_ -f1)
+            version=$(echo "$fname" | cut -d_ -f2)
+            tag="${id}-${version}"
+            gh release view "$tag" > /dev/null 2>&1 || \
+              gh release create "$tag" --title "$tag" --notes "Auto-built by CI"
+            gh release upload "$tag" "$kpkg" --clobber
+          done
 
       - name: Commit updated manifest
         run: |
