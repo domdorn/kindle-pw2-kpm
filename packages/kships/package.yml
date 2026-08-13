@@ -1,0 +1,10 @@
+id: kships
+name: KShips
+author: LOT-PL
+description: "Battleship port for Kindle"
+platform: kindlepw2
+source:
+  type: github_release
+  repo: LOT-PL/KShips
+  asset_pattern: "KShips.zip"
+  # zip extracts flat (KShips.sh, KShips/) — no subdir
