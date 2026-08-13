@@ -93,16 +93,18 @@ Key paths on the Kindle:
 
 ## CI setup
 
-The GitHub Actions workflow builds all packages and deploys via SSH on every push to `main`
-and on a weekly schedule to pick up upstream releases.
+The GitHub Actions workflow builds all packages and publishes them as GitHub Releases on
+every push to `main` and on a weekly schedule to pick up upstream releases.
 
-**Required GitHub secrets:**
-- `DEPLOY_SSH_KEY` — private SSH key with access to the deploy server
+No secrets or variables need to be configured — the workflow uses the built-in
+`GITHUB_TOKEN`. The following variables can optionally be set in repository settings to
+customise the generated `manifest.v2.json`:
 
-**Optional GitHub variables** (with defaults):
-- `REPO_ID` — `dominikdorn`
-- `REPO_NAME` — `Dominik Dorn KPM Repo`
-- `REPO_DESC` — description string
+| Variable | Default |
+|----------|---------|
+| `REPO_ID` | `dominikdorn` |
+| `REPO_NAME` | `Dominik Dorn KPM Repo` |
+| `REPO_DESC` | `kindlepw2-compatible packages` |
 
 ## Known limitations
 
