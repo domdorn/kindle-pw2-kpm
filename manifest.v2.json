@@ -118,6 +118,19 @@
         }
       ]
     },
+    "kompanion": {
+      "name": "KOmpanion",
+      "author": "Marek",
+      "description": "Indexes epub files and opens them in KOReader when tapped",
+      "artifacts": [
+        {
+          "url": "https://github.com/domdorn/koreader-companion/releases/download/v0.1.2/kompanion-0.1.2.kpkg",
+          "version": [0, 1, 2],
+          "dependencies": [],
+          "supported_platforms": ["kindlehf", "kindlepw2"]
+        }
+      ]
+    },
     "koreader": {
       "name": "KOReader",
       "author": "KOReader Team",
