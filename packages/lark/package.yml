@@ -2,7 +2,7 @@ id: lark
 name: LARK
 author: kbarni
 description: "Libre Audiobook Player for Kindle. Supports AAC encoded M4B audiobooks."
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: kbarni/LARKPlayer

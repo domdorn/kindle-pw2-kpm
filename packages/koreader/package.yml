@@ -2,10 +2,16 @@ id: koreader
 name: KOReader
 author: KOReader Team
 description: "An ebook reader application supporting PDF, DjVu, EPUB, FB2 and many more formats"
-platform: kindlepw2
-source:
-  type: github_release
-  repo: koreader/koreader
-  asset_pattern: "koreader-kindlepw2-*.zip"
-  # The zip extracts to a koreader/ folder directly
-  extract_subdir: koreader
+artifacts:
+  - platform: kindlepw2
+    source:
+      type: github_release
+      repo: koreader/koreader
+      asset_pattern: "koreader-kindlepw2-*.zip"
+      extract_subdir: koreader
+  - platform: kindlehf
+    source:
+      type: github_release
+      repo: koreader/koreader
+      asset_pattern: "koreader-kindlehf-*.zip"
+      extract_subdir: koreader

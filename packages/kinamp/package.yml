@@ -2,7 +2,7 @@ id: kinamp
 name: KinAMP
 author: kbarni
 description: "Native Kindle music and radio player with KOReader integration"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: kbarni/KinAMP

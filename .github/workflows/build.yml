@@ -24,6 +24,10 @@ jobs:
       - name: Install dependencies
         run: pip install pyyaml
 
+      - name: Set build tag
+        id: tag
+        run: echo "value=build-$(date -u '+%Y%m%d_%H%M%S')" >> "$GITHUB_OUTPUT"
+
       - name: Build all packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,16 +35,14 @@ jobs:
           REPO_NAME: ${{ vars.REPO_NAME || 'Dominik Dorn KPM Repo' }}
           REPO_DESC: ${{ vars.REPO_DESC || 'kindlepw2-compatible packages' }}
         run: |
-          SHORT_SHA="${GITHUB_SHA::7}"
-          REPO_BASE_URL="https://github.com/${{ github.repository }}/releases/download/build-${SHORT_SHA}" \
+          REPO_BASE_URL="https://github.com/${{ github.repository }}/releases/download/${{ steps.tag.outputs.value }}" \
             python build.py
 
       - name: Publish packages as GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          SHORT_SHA="${GITHUB_SHA::7}"
-          TAG="build-${SHORT_SHA}"
+          TAG="${{ steps.tag.outputs.value }}"
           gh release create "$TAG" --title "$TAG" --notes "Auto-built by CI" dist/*.kpkg
 
       - name: Clean up old releases

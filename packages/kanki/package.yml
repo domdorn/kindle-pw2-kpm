@@ -2,7 +2,7 @@ id: kanki
 name: KAnki
 author: crizmo
 description: "Local Kindle flashcard app with custom decks and spaced repetition"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: url
   url: "https://github.com/crizmo/KAnki/releases/download/v1.1.2/kanki.zip"

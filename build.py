@@ -6,6 +6,15 @@ Usage:
     python build.py                    # build all packages
     python build.py koreader kterm     # build specific packages
     python build.py --manifest-only    # regenerate manifest from existing dist/
+
+package.yml platform field variants:
+    platform: kindlepw2                    # single platform (string)
+    platform: [kindlepw2, kindlehf]        # single kpkg supports both platforms
+    artifacts:                             # separate kpkg per platform (different downloads)
+      - platform: kindlepw2
+        source: ...
+      - platform: kindlehf
+        source: ...
 """
 
 import argparse
@@ -81,14 +90,14 @@ def extract_zip(zip_path, dest_dir, subdir=None):
     return dest_dir
 
 
-def build_kpkg(pkg_dir, payload_dir, pkg_meta, version_tuple, output_path):
+def build_kpkg(pkg_dir, payload_dir, pkg_meta, version_tuple, output_path, platforms):
     """
     Build a clean .kpkg (gzipped tar, no macOS metadata).
 
     pkg_dir     — package source dir (contains install.sh etc.)
     payload_dir — extracted upstream release dir (the actual app files)
+    platforms   — list of supported platform strings for manifest.json
     """
-    # Build the staging directory
     with tempfile.TemporaryDirectory() as staging:
         # Copy package scripts
         for fname in ["install.sh", "launch.sh", "uninstall.sh"]:
@@ -103,9 +112,9 @@ def build_kpkg(pkg_dir, payload_dir, pkg_meta, version_tuple, output_path):
                 shutil.copytree(src, os.path.join(staging, extra))
 
         # Copy the payload under its subdir name
-        subdir_name = pkg_meta["source"].get("extract_subdir", pkg_meta["id"])
+        subdir_name = pkg_meta["source"].get("extract_subdir", pkg_meta["id"]) if "source" in pkg_meta else pkg_meta["id"]
         payload_dest = os.path.join(staging, subdir_name)
-        if payload_dir != staging:  # avoid copying into itself
+        if payload_dir != staging:
             if os.path.isdir(payload_dir):
                 shutil.copytree(payload_dir, payload_dest)
             else:
@@ -120,7 +129,7 @@ def build_kpkg(pkg_dir, payload_dir, pkg_meta, version_tuple, output_path):
             "description": pkg_meta["description"],
             "version": list(version_tuple),
             "dependencies": pkg_meta.get("dependencies", []),
-            "supported_platforms": [pkg_meta["platform"]],
+            "supported_platforms": platforms,
         }
         with open(os.path.join(staging, "manifest.json"), "w") as f:
             json.dump(manifest, f, indent=2)
@@ -150,73 +159,127 @@ def parse_version(tag):
     return tuple(parts)
 
 
+def _resolve_platforms(raw):
+    """Normalize platform field to a list."""
+    if isinstance(raw, list):
+        return raw
+    return [raw]
+
+
+def _fetch_source(source, tmpdir):
+    """Download and extract a source, return (payload_dir, version_tuple)."""
+    if source["type"] == "github_release":
+        release = gh_latest_release(source["repo"])
+        version = parse_version(release["tag_name"])
+        print(f"  Version: {'.'.join(str(v) for v in version)} (tag: {release['tag_name']})")
+
+        asset = find_asset(
+            release["assets"],
+            source["asset_pattern"],
+            source.get("asset_exclude_pattern"),
+        )
+        if not asset:
+            print(f"  [ERROR] No asset matching '{source['asset_pattern']}'")
+            return None, None
+
+        zip_path = os.path.join(tmpdir, asset["name"])
+        download(asset["browser_download_url"], zip_path)
+        payload_dir = extract_zip(zip_path, tmpdir, source.get("extract_subdir"))
+        return payload_dir, version
+
+    elif source["type"] == "url":
+        version = parse_version(source.get("version", "1.0.0"))
+        fname = source["url"].split("/")[-1]
+        zip_path = os.path.join(tmpdir, fname)
+        download(source["url"], zip_path)
+        payload_dir = extract_zip(zip_path, tmpdir, source.get("extract_subdir"))
+        return payload_dir, version
+
+    else:
+        print(f"  [ERROR] Unknown source type: {source['type']}")
+        return None, None
+
+
 def build_package(pkg_name):
+    """Build all artifacts for a package. Returns list of result dicts."""
     pkg_dir = os.path.join(PACKAGES_DIR, pkg_name)
     yml_path = os.path.join(pkg_dir, "package.yml")
     if not os.path.exists(yml_path):
         print(f"[SKIP] {pkg_name}: no package.yml")
-        return None
+        return []
 
     with open(yml_path) as f:
         meta = yaml.safe_load(f)
 
     print(f"\n[BUILD] {meta['id']} ({meta['name']})")
-
-    source = meta["source"]
     os.makedirs(DIST_DIR, exist_ok=True)
 
+    # Multi-artifact mode: separate source download per platform
+    if "artifacts" in meta:
+        results = []
+        for artifact_spec in meta["artifacts"]:
+            platforms = _resolve_platforms(artifact_spec["platform"])
+            source = artifact_spec["source"]
+            # Inject extract_subdir default from top-level source if not set
+            if "extract_subdir" not in source and "source" in meta and "extract_subdir" in meta["source"]:
+                source = dict(source)
+                source["extract_subdir"] = meta["source"]["extract_subdir"]
+
+            with tempfile.TemporaryDirectory() as tmpdir:
+                payload_dir, version = _fetch_source(source, tmpdir)
+                if payload_dir is None:
+                    continue
+
+                ver_str = ".".join(str(v) for v in version)
+                primary_platform = platforms[0]
+                kpkg_name = f"{meta['id']}_{ver_str}_{primary_platform}.kpkg"
+                kpkg_path = os.path.join(DIST_DIR, kpkg_name)
+
+                # Temporarily patch meta so build_kpkg can find the subdir name
+                meta_with_source = dict(meta)
+                meta_with_source["source"] = source
+                build_kpkg(pkg_dir, payload_dir, meta_with_source, version, kpkg_path, platforms)
+                print(f"  Built: {kpkg_path} ({os.path.getsize(kpkg_path) // 1024}KB)")
+
+                results.append({
+                    "id": meta["id"],
+                    "name": meta["name"],
+                    "author": meta["author"],
+                    "description": meta["description"],
+                    "kpkg_name": kpkg_name,
+                    "version": list(version),
+                    "platforms": platforms,
+                    "dependencies": meta.get("dependencies", []),
+                })
+        return results
+
+    # Single-artifact mode: one download, platform can be string or list
+    platforms = _resolve_platforms(meta.get("platform", "kindlepw2"))
+    source = meta["source"]
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        if source["type"] == "github_release":
-            release = gh_latest_release(source["repo"])
-            version = parse_version(release["tag_name"])
-            print(f"  Version: {'.'.join(str(v) for v in version)} (tag: {release['tag_name']})")
+        payload_dir, version = _fetch_source(source, tmpdir)
+        if payload_dir is None:
+            return []
 
-            asset = find_asset(
-                release["assets"],
-                source["asset_pattern"],
-                source.get("asset_exclude_pattern"),
-            )
-            if not asset:
-                print(f"  [ERROR] No asset matching '{source['asset_pattern']}'")
-                return None
-
-            zip_path = os.path.join(tmpdir, asset["name"])
-            download(asset["browser_download_url"], zip_path)
-
-            payload_dir = extract_zip(
-                zip_path, tmpdir, source.get("extract_subdir")
-            )
-
-        elif source["type"] == "url":
-            version = parse_version(source.get("version", "1.0.0"))
-            fname = source["url"].split("/")[-1]
-            zip_path = os.path.join(tmpdir, fname)
-            download(source["url"], zip_path)
-            payload_dir = extract_zip(
-                zip_path, tmpdir, source.get("extract_subdir")
-            )
-        else:
-            print(f"  [ERROR] Unknown source type: {source['type']}")
-            return None
-
-        platform = meta["platform"]
         ver_str = ".".join(str(v) for v in version)
-        kpkg_name = f"{meta['id']}_{ver_str}_{platform}.kpkg"
+        primary_platform = platforms[0]
+        kpkg_name = f"{meta['id']}_{ver_str}_{primary_platform}.kpkg"
         kpkg_path = os.path.join(DIST_DIR, kpkg_name)
 
-        manifest = build_kpkg(pkg_dir, payload_dir, meta, version, kpkg_path)
+        build_kpkg(pkg_dir, payload_dir, meta, version, kpkg_path, platforms)
         print(f"  Built: {kpkg_path} ({os.path.getsize(kpkg_path) // 1024}KB)")
 
-    return {
+    return [{
         "id": meta["id"],
         "name": meta["name"],
         "author": meta["author"],
         "description": meta["description"],
         "kpkg_name": kpkg_name,
         "version": list(version),
-        "platform": platform,
+        "platforms": platforms,
         "dependencies": meta.get("dependencies", []),
-    }
+    }]
 
 
 def generate_manifest(built_packages):
@@ -228,7 +291,7 @@ def generate_manifest(built_packages):
             "url": f"{REPO_BASE_URL}/{pkg['kpkg_name']}",
             "version": pkg["version"],
             "dependencies": pkg["dependencies"],
-            "supported_platforms": [pkg["platform"]],
+            "supported_platforms": pkg["platforms"],
         }
         if pkg_id not in packages:
             packages[pkg_id] = {
@@ -255,7 +318,7 @@ def generate_manifest(built_packages):
 def load_existing_manifest():
     """Load existing manifest to merge with new builds."""
     if not os.path.exists(MANIFEST_FILE):
-        return {}
+        return []
     with open(MANIFEST_FILE) as f:
         m = json.load(f)
     result = []
@@ -269,7 +332,7 @@ def load_existing_manifest():
                 "description": pkg["description"],
                 "kpkg_name": kpkg_name,
                 "version": artifact["version"],
-                "platform": artifact["supported_platforms"][0],
+                "platforms": artifact["supported_platforms"],
                 "dependencies": artifact.get("dependencies", []),
             })
     return result
@@ -298,9 +361,9 @@ def main():
     failed = []
     for pkg_name in targets:
         try:
-            result = build_package(pkg_name)
-            if result:
-                built.append(result)
+            results = build_package(pkg_name)
+            if results:
+                built.extend(results)
             else:
                 failed.append(pkg_name)
         except Exception as e:
@@ -319,7 +382,7 @@ def main():
 
     generate_manifest(built)
 
-    print(f"\nDone: {len(built)} built, {len(failed)} failed")
+    print(f"\nDone: {len(built)} artifact(s) built, {len(failed)} failed")
     if failed:
         print(f"Failed: {', '.join(failed)}")
         sys.exit(1)

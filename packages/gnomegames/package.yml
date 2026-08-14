@@ -2,7 +2,7 @@ id: gnomegames
 name: Gnome Games
 author: crazy-electron
 description: "Touch-friendly ports of Gnome Chess and Minesweeper for Kindle"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: crazy-electron/GnomeGames4Kindle

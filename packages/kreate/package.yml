@@ -2,7 +2,7 @@ id: kreate
 name: Kreate
 author: Foskya
 description: "Minimal drawing app for Kindle with tap-based dots, lines, and curves"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: url
   url: "https://github.com/Foskya/Kreate/archive/refs/heads/main.zip"

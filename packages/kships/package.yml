@@ -2,7 +2,7 @@ id: kships
 name: KShips
 author: LOT-PL
 description: "Battleship port for Kindle"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: LOT-PL/KShips

@@ -2,11 +2,17 @@ id: kterm
 name: KTerm
 author: bfabiszewski
 description: "Terminal emulator for Kindle. Required by many other packages."
-platform: kindlepw2
-source:
-  type: github_release
-  repo: bfabiszewski/kterm
-  asset_pattern: "kterm-kindle-*.zip"
-  # Exclude the armhf build — plain zip is armel (kindlepw2)
-  asset_exclude_pattern: "*-armhf*"
-  extract_subdir: kterm
+artifacts:
+  - platform: kindlepw2
+    source:
+      type: github_release
+      repo: bfabiszewski/kterm
+      asset_pattern: "kterm-kindle-*.zip"
+      asset_exclude_pattern: "*-armhf*"
+      extract_subdir: kterm
+  - platform: kindlehf
+    source:
+      type: github_release
+      repo: bfabiszewski/kterm
+      asset_pattern: "kterm-kindle-*-armhf.zip"
+      extract_subdir: kterm

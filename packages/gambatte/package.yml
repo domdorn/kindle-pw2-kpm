@@ -2,7 +2,7 @@ id: gambatte
 name: Gambatte-K2
 author: crazy-electron
 description: "Modern Game Boy and Game Boy Color emulator for Kindle"
-platform: kindlepw2
+platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: crazy-electron/gambatte-k2
