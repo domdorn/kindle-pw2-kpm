@@ -34,6 +34,12 @@ Then install packages normally:
 | gnomegames | Gnome Chess & Mines | [crazy-electron/GnomeGames4Kindle](https://github.com/crazy-electron/GnomeGames4Kindle) |
 | kanki | KAnki (Flashcards) | [crizmo/KAnki](https://github.com/crizmo/KAnki) |
 | kreate | Kreate (Drawing) | [Foskya/Kreate](https://github.com/Foskya/Kreate) |
+| koplugin-annas | Anna's Archive (KOReader plugin) | [fischer-hub/annas.koplugin](https://github.com/fischer-hub/annas.koplugin) |
+| koplugin-zlibrary | Z-library (KOReader plugin) | [ZlibraryKO/zlibrary.koplugin](https://github.com/ZlibraryKO/zlibrary.koplugin) |
+| koplugin-filebrowser | Filebrowser (KOReader plugin) | [b-/filebrowser.koplugin](https://github.com/b-/filebrowser.koplugin) |
+
+KOReader plugins (`koplugin-*`) install into `koreader/plugins/` and require KOReader
+(`;kpm install koreader` first).
 
 ## Adding a new package
 

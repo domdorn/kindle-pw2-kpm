@@ -1,0 +1,14 @@
+id: koplugin-zlibrary
+name: "Z-library (KOReader plugin)"
+author: ZlibraryKO
+description: "KOReader plugin to search and download books from Z-library. Requires KOReader (install koreader first)."
+# NOTE: KPM 0.2.2/CLI 1.0.0 cannot index a non-empty `dependencies` array
+# (SQLite error 19 drops the whole repo), so the koreader requirement is
+# stated in the description instead. See CLAUDE.md.
+dependencies: []
+platform: [kindlepw2, kindlehf]
+source:
+  type: github_release
+  repo: ZlibraryKO/zlibrary.koplugin
+  asset_pattern: "zlibrary_plugin_*.zip"
+  extract_subdir: plugins

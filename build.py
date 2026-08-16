@@ -33,8 +33,13 @@ import yaml  # pip install pyyaml
 
 PACKAGES_DIR = "packages"
 DIST_DIR = "dist"
-MANIFEST_FILE = "manifest.v2.json"
-REPO_BASE_URL = os.environ.get("REPO_BASE_URL", "https://dominikdorn.com/kpm")
+# MANIFEST_FILE override lets a local test build write a separate (gitignored)
+# manifest, e.g. MANIFEST_FILE=test-manifest.v2.json for an on-device test repo.
+MANIFEST_FILE = os.environ.get("MANIFEST_FILE", "manifest.v2.json")
+# Default points at the GitHub Releases "latest" alias; CI overrides REPO_BASE_URL with the
+# per-build release URL. For local on-device testing, override it (and REPO_ID/MANIFEST_FILE)
+# to point a throwaway manifest at wherever you host the test kpkgs.
+REPO_BASE_URL = os.environ.get("REPO_BASE_URL", "https://github.com/domdorn/kindlepw2-kpm/releases/latest/download")
 REPO_ID = os.environ.get("REPO_ID", "dominikdorn")
 REPO_NAME = os.environ.get("REPO_NAME", "Dominik Dorn KPM Repo")
 REPO_DESC = os.environ.get("REPO_DESC", "kindlepw2-compatible packages pending upstream inclusion")
@@ -75,9 +80,14 @@ def download(url, dest):
 
 
 def extract_zip(zip_path, dest_dir, subdir=None):
-    """Extract a zip, optionally pulling out only one subdirectory as the root."""
-    with zipfile.ZipFile(zip_path) as zf:
-        zf.extractall(dest_dir)
+    """Extract a zip or tarball, optionally pulling out one subdirectory as the root."""
+    lower = zip_path.lower()
+    if lower.endswith((".tar.gz", ".tgz", ".tar")):
+        with tarfile.open(zip_path) as tf:
+            tf.extractall(dest_dir)
+    else:
+        with zipfile.ZipFile(zip_path) as zf:
+            zf.extractall(dest_dir)
     if subdir:
         subdir_path = os.path.join(dest_dir, subdir)
         if not os.path.isdir(subdir_path):
@@ -113,10 +123,14 @@ def build_kpkg(pkg_dir, payload_dir, pkg_meta, version_tuple, output_path, platf
 
         # Copy the payload under its subdir name
         subdir_name = pkg_meta["source"].get("extract_subdir", pkg_meta["id"]) if "source" in pkg_meta else pkg_meta["id"]
+        # payload_exclude: glob patterns dropped from the payload (e.g. ".git",
+        # redundant bundled archives) so they don't bloat the kpkg.
+        excludes = pkg_meta["source"].get("payload_exclude", []) if "source" in pkg_meta else []
         payload_dest = os.path.join(staging, subdir_name)
         if payload_dir != staging:
             if os.path.isdir(payload_dir):
-                shutil.copytree(payload_dir, payload_dest)
+                ignore = shutil.ignore_patterns(*excludes) if excludes else None
+                shutil.copytree(payload_dir, payload_dest, ignore=ignore)
             else:
                 shutil.copy2(payload_dir, payload_dest)
 

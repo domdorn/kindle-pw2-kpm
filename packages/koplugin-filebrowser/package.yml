@@ -1,0 +1,19 @@
+id: koplugin-filebrowser
+name: "Filebrowser (KOReader plugin)"
+author: b-
+description: "Run the Filebrowser web server from within KOReader to upload/download files over your network. Requires KOReader (install koreader first). Serves on port 80 with default login admin/admin — change it in the web UI."
+# NOTE: KPM 0.2.2/CLI 1.0.0 cannot index a non-empty `dependencies` array
+# (SQLite error 19 drops the whole repo), so the koreader requirement is
+# stated in the description instead. See CLAUDE.md.
+dependencies: []
+# Go binary is statically linked ARMv7 — runs on both kindlepw2 and kindlehf.
+# (The arm64 release asset is for non-Kindle devices; all current Kindles are armv7.)
+platform: [kindlepw2, kindlehf]
+source:
+  type: github_release
+  repo: b-/filebrowser.koplugin
+  asset_pattern: "*-linux-armv7.tar.gz"
+  extract_subdir: filebrowser.koplugin
+  # The release tarball ships a full .git/, a redundant 12MB bundled tarball,
+  # and CI files — none belong in the kpkg.
+  payload_exclude: [".git", ".github", ".gitignore", "linux-armv7-filebrowser.tar.gz"]

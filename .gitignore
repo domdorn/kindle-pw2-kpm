@@ -2,3 +2,7 @@ dist/
 __pycache__/
 *.pyc
 .DS_Store
+.venv/
+# local testing repo manifests (deployed to a test host, never public)
+test-manifest.v2.json
+*.test.v2.json

@@ -1,0 +1,14 @@
+id: koplugin-annas
+name: "Anna's Archive (KOReader plugin)"
+author: fischer-hub
+description: "KOReader plugin to search and download books from Anna's Archive. Requires KOReader (install koreader first)."
+# NOTE: KPM 0.2.2/CLI 1.0.0 cannot index a non-empty `dependencies` array
+# (SQLite error 19 drops the whole repo), so the koreader requirement is
+# stated in the description instead. See CLAUDE.md.
+dependencies: []
+platform: [kindlepw2, kindlehf]
+source:
+  type: github_release
+  repo: fischer-hub/annas.koplugin
+  asset_pattern: "annas.koplugin-*.zip"
+  extract_subdir: annas.koplugin
