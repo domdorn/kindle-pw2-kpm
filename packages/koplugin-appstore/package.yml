@@ -1,0 +1,15 @@
+id: koplugin-appstore
+name: "App Store (KOReader plugin)"
+author: omer-faruq
+description: "In-device store to discover, install, and update hundreds of community KOReader plugins and user patches from GitHub. Tools -> App Store. Needs KOReader 2024.12+ (install koreader first); a GitHub PAT is optional but avoids API rate limits."
+# NOTE: KPM 0.2.2/CLI 1.0.0 cannot index a non-empty `dependencies` array
+# (SQLite error 19 drops the whole repo), so the koreader requirement is
+# stated in the description instead. See CLAUDE.md.
+dependencies: []
+platform: [kindlepw2, kindlehf]
+source:
+  type: github_release
+  repo: omer-faruq/appstore.koplugin
+  tag: "v1.12.0"
+  asset_pattern: "appstore.koplugin.zip"
+  extract_subdir: appstore.koplugin

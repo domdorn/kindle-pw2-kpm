@@ -34,12 +34,19 @@ Then install packages normally:
 | gnomegames | Gnome Chess & Mines | [crazy-electron/GnomeGames4Kindle](https://github.com/crazy-electron/GnomeGames4Kindle) |
 | kanki | KAnki (Flashcards) | [crizmo/KAnki](https://github.com/crizmo/KAnki) |
 | kreate | Kreate (Drawing) | [Foskya/Kreate](https://github.com/Foskya/Kreate) |
+| kwordle | KWordle (Wordle) | [crizmo/KWordle](https://github.com/crizmo/KWordle) |
+| koplugin-appstore | App Store (KOReader plugin) | [omer-faruq/appstore.koplugin](https://github.com/omer-faruq/appstore.koplugin) |
 | koplugin-annas | Anna's Archive (KOReader plugin) | [fischer-hub/annas.koplugin](https://github.com/fischer-hub/annas.koplugin) |
 | koplugin-zlibrary | Z-library (KOReader plugin) | [ZlibraryKO/zlibrary.koplugin](https://github.com/ZlibraryKO/zlibrary.koplugin) |
 | koplugin-filebrowser | Filebrowser (KOReader plugin) | [b-/filebrowser.koplugin](https://github.com/b-/filebrowser.koplugin) |
 
 KOReader plugins (`koplugin-*`) install into `koreader/plugins/` and require KOReader
 (`;kpm install koreader` first).
+
+> **Want more KOReader plugins?** Install **[`koplugin-appstore`](https://github.com/omer-faruq/appstore.koplugin)**
+> (`;kpm install koplugin-appstore`) — it adds an in-device **App Store** (KOReader → Tools →
+> App Store) that discovers, installs, and updates hundreds of community plugins and user
+> patches directly from GitHub, without leaving your Kindle.
 
 ## Adding a new package
 
