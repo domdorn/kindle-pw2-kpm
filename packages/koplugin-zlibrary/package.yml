@@ -10,6 +10,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: ZlibraryKO/zlibrary.koplugin
-  tag: "v1.0.46-81fa5fb5a4f5a41bdffd6abb267ed2d8fc55e15b"
+  tag: "v1.0.47-9501072cd75accd629d97b3ac8a3b250737c540b"
   asset_pattern: "zlibrary_plugin_*.zip"
   extract_subdir: plugins
