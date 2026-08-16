@@ -5,7 +5,9 @@
     {
       "customType": "regex",
       "description": "Track upstream GitHub releases pinned via `tag:` in each package.yml",
-      "fileMatch": ["^packages/[^/]+/package\\.yml$"],
+      "managerFilePatterns": [
+        "/^packages/[^/]+/package\\.yml$/"
+      ],
       "matchStrings": [
         "repo:\\s*(?<depName>\\S+)\\s*\\n\\s*tag:\\s*\"?(?<currentValue>[^\"\\n]+?)\"?\\s*(?:\\n|$)"
       ],
