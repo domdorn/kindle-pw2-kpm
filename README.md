@@ -70,8 +70,10 @@ latest release). Pinning keeps builds reproducible and records every version bum
 
 [Renovate](https://docs.renovatebot.com/) watches upstream releases and opens a PR bumping
 `tag:` when a new one appears — config in [`renovate.json`](renovate.json). Tags with odd
-formats (commit-hash or date suffixes) get a per-package `extractVersion` rule there.
-`type: url` packages and branch tarballs are not auto-tracked.
+formats (commit-hash or date suffixes) get a per-package `regex` versioning rule there — it
+compares by the embedded semver while writing the **full** tag back (an `extractVersion`
+rule would strip the suffix and break the fetch). `type: url` packages and branch tarballs
+are not auto-tracked.
 
 ### package.yml reference
 

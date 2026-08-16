@@ -15,14 +15,14 @@
   ],
   "packageRules": [
     {
-      "description": "filebrowser tags look like main_2026-02-07-2.57.0 — compare by the trailing semver",
+      "description": "filebrowser tags look like main_2026-02-07-2.57.0 — regex versioning compares by the trailing semver but writes back the full tag (extractVersion would strip it and break the fetch)",
       "matchDepNames": ["b-/filebrowser.koplugin"],
-      "extractVersion": "-(?<version>\\d+\\.\\d+\\.\\d+)$"
+      "versioning": "regex:^main_(?<build>\\d{4}-\\d{2}-\\d{2})-(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     },
     {
-      "description": "zlibrary tags look like v1.0.46-<commit hash> — compare by the leading semver",
+      "description": "zlibrary tags look like v1.0.46-<commit hash> — regex versioning compares by the leading semver but writes back the full tag (extractVersion would strip the hash and break the fetch)",
       "matchDepNames": ["ZlibraryKO/zlibrary.koplugin"],
-      "extractVersion": "^v?(?<version>\\d+\\.\\d+\\.\\d+)"
+      "versioning": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>[0-9a-f]+)$"
     }
   ]
 }
