@@ -10,5 +10,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: fischer-hub/annas.koplugin
+  tag: "v0.2.0"
   asset_pattern: "annas.koplugin-*.zip"
   extract_subdir: annas.koplugin

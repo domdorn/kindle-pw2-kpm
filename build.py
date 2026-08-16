@@ -45,9 +45,8 @@ REPO_NAME = os.environ.get("REPO_NAME", "Dominik Dorn KPM Repo")
 REPO_DESC = os.environ.get("REPO_DESC", "kindlepw2-compatible packages pending upstream inclusion")
 
 
-def gh_latest_release(repo):
-    """Fetch latest release metadata from GitHub API."""
-    url = f"https://api.github.com/repos/{repo}/releases/latest"
+def gh_get(url):
+    """GET a GitHub API URL with optional auth, return parsed JSON."""
     headers = {"Accept": "application/vnd.github.v3+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token:
@@ -55,6 +54,13 @@ def gh_latest_release(repo):
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req) as resp:
         return json.load(resp)
+
+
+def gh_release(repo, tag=None):
+    """Fetch release metadata: the pinned `tag` if given, else the latest release."""
+    if tag:
+        return gh_get(f"https://api.github.com/repos/{repo}/releases/tags/{tag}")
+    return gh_get(f"https://api.github.com/repos/{repo}/releases/latest")
 
 
 def find_asset(assets, pattern, exclude_pattern=None):
@@ -183,9 +189,12 @@ def _resolve_platforms(raw):
 def _fetch_source(source, tmpdir):
     """Download and extract a source, return (payload_dir, version_tuple)."""
     if source["type"] == "github_release":
-        release = gh_latest_release(source["repo"])
+        # `tag` pins the upstream release (tracked in git, bumped by Renovate);
+        # without it, fall back to the latest release.
+        release = gh_release(source["repo"], source.get("tag"))
         version = parse_version(release["tag_name"])
-        print(f"  Version: {'.'.join(str(v) for v in version)} (tag: {release['tag_name']})")
+        pin = "pinned" if source.get("tag") else "latest"
+        print(f"  Version: {'.'.join(str(v) for v in version)} (tag: {release['tag_name']}, {pin})")
 
         asset = find_asset(
             release["assets"],

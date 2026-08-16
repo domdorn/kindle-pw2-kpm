@@ -1,0 +1,28 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track upstream GitHub releases pinned via `tag:` in each package.yml",
+      "fileMatch": ["^packages/[^/]+/package\\.yml$"],
+      "matchStrings": [
+        "repo:\\s*(?<depName>\\S+)\\s*\\n\\s*tag:\\s*\"?(?<currentValue>[^\"\\n]+?)\"?\\s*(?:\\n|$)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "filebrowser tags look like main_2026-02-07-2.57.0 — compare by the trailing semver",
+      "matchDepNames": ["b-/filebrowser.koplugin"],
+      "extractVersion": "-(?<version>\\d+\\.\\d+\\.\\d+)$"
+    },
+    {
+      "description": "zlibrary tags look like v1.0.46-<commit hash> — compare by the leading semver",
+      "matchDepNames": ["ZlibraryKO/zlibrary.koplugin"],
+      "extractVersion": "^v?(?<version>\\d+\\.\\d+\\.\\d+)"
+    }
+  ]
+}

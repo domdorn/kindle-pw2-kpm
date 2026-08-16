@@ -6,5 +6,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: LOT-PL/KShips
+  tag: "1.5.6"
   asset_pattern: "KShips.zip"
   # zip extracts flat (KShips.sh, KShips/) — no subdir

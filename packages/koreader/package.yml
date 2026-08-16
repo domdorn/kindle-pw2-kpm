@@ -7,11 +7,13 @@ artifacts:
     source:
       type: github_release
       repo: koreader/koreader
+      tag: "v2026.07.1"
       asset_pattern: "koreader-kindlepw2-*.zip"
       extract_subdir: koreader
   - platform: kindlehf
     source:
       type: github_release
       repo: koreader/koreader
+      tag: "v2026.07.1"
       asset_pattern: "koreader-kindlehf-*.zip"
       extract_subdir: koreader

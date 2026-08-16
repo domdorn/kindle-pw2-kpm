@@ -6,5 +6,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: crazy-electron/gambatte-k2
+  tag: "1.0"
   asset_pattern: "gambatte-k2.zip"
   extract_subdir: "gambatte-k2"

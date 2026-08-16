@@ -6,5 +6,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: kbarni/LARKPlayer
+  tag: "2.8.1"
   asset_pattern: "lark.zip"
   # zip extracts flat (LARK/, documents/, extensions/) — no subdir

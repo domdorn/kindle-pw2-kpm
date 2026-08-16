@@ -6,5 +6,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: kbarni/KinAMP
+  tag: "3.0beta"
   asset_pattern: "kinamp.zip"
   # zip extracts flat (documents/, extensions/, KinAMP/, koreader/) — no subdir

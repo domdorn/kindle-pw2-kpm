@@ -12,6 +12,7 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: b-/filebrowser.koplugin
+  tag: "main_2026-02-07-2.57.0"
   asset_pattern: "*-linux-armv7.tar.gz"
   extract_subdir: filebrowser.koplugin
   # The release tarball ships a full .git/, a redundant 12MB bundled tarball,

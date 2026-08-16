@@ -54,6 +54,7 @@ platform: kindlepw2
 source:
   type: github_release
   repo: owner/repo
+  tag: "v1.2.3"               # pinned upstream release — bumped by Renovate (see below)
   asset_pattern: "mypackage-*.zip"
   extract_subdir: mypackage   # subfolder inside the zip to use as payload root
 ```
@@ -61,6 +62,16 @@ source:
 2. Add `install.sh`, `launch.sh`, `uninstall.sh` under `packages/<id>/`.
 
 3. Run `python build.py <id>` locally to test, then push — CI builds and deploys automatically.
+
+### Version pinning & automatic updates
+
+Each `github_release` source pins an explicit upstream `tag:` (omit it to always take the
+latest release). Pinning keeps builds reproducible and records every version bump in git.
+
+[Renovate](https://docs.renovatebot.com/) watches upstream releases and opens a PR bumping
+`tag:` when a new one appears — config in [`renovate.json`](renovate.json). Tags with odd
+formats (commit-hash or date suffixes) get a per-package `extractVersion` rule there.
+`type: url` packages and branch tarballs are not auto-tracked.
 
 ### package.yml reference
 
@@ -73,6 +84,7 @@ platform: kindlepw2     # or kindlehf, kindle5, kindle
 source:
   type: github_release  # or: url
   repo: owner/repo      # for github_release
+  tag: "v1.2.3"         # optional: pin a release (Renovate-tracked); omit = latest
   asset_pattern: "*.zip"           # glob matched against release asset names
   asset_exclude_pattern: "*-armhf*"  # optional glob to exclude (e.g. wrong arch)
   extract_subdir: foldername       # subfolder inside zip to use as payload

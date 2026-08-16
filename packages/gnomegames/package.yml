@@ -6,5 +6,6 @@ platform: [kindlepw2, kindlehf]
 source:
   type: github_release
   repo: crazy-electron/GnomeGames4Kindle
+  tag: "v1.1"
   asset_pattern: "gnomegames.zip"
   extract_subdir: "gnomegames"
