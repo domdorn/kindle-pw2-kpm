@@ -1,0 +1,18 @@
+id: kwordle
+name: KWordle
+author: Kurizu
+description: "Wordle for Kindle — 5-letter word-guessing game with black-and-white-friendly indicators, multiple languages, and stats. Runs in the native browser; open the KWordle booklet from your library to play."
+platform: [kindlepw2, kindlehf]
+source:
+  type: github_release
+  repo: crizmo/KWordle
+  tag: "v1.5.0"
+  # Two assets per release: kwordle.zip (modern firmware) and kwordle-legacy.zip
+  # (firmware <= 5.6.1.1). Modern kindlepw2/hf devices use the standard one.
+  asset_pattern: "kwordle.zip"
+  asset_exclude_pattern: "*legacy*"
+  # No extract_subdir → payload dir is the temp dir holding the extracted files AND
+  # the downloaded zip; drop the zip so it isn't bundled into the kpkg.
+  payload_exclude: ["*.zip"]
+  # zip extracts flat (kwordle/ game dir + kwordle.sh launcher) — no extract_subdir;
+  # payload lands at ./kwordle/ in the kpkg, install.sh copies both into documents/.
